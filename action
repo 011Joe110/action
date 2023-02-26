@@ -1,0 +1,51 @@
+                $serviceError .= " {$parts['code']} ({$parts['type']}): "
+
+                    . "{$parts['message']} - " . $err['response']->getBody();
+
+            } catch (ParserException $e) {
+
+                $parts = [];
+
+                $serviceError .= ' Unable to parse error information from '
+
+                    . "response - {$e->getMessage()}";
+
+            }
+
+ 
+
+            $parts['response'] = $err['response'];
+
+        }
+
+ 
+
+        $parts['exception'] = $err['exception'];
+
+        $parts['request'] = $request;
+
+        $parts['connection_error'] = !empty($err['connection_error']);
+
+        $parts['transfer_stats'] = $stats;
+
+ 
+
+        return new $this->exceptionClass(
+
+            sprintf(
+
+                'Error executing "%s" on "%s"; %s',
+
+                $command->action(),
+
+                $request->getUri(),
+
+                $serviceError
+
+            ),
+
+            $command,
+
+            $parts,
+
+            $err['exception'
